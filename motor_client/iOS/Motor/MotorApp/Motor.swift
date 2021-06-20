@@ -1,8 +1,8 @@
 //
-//  TempHum.swift
-//  TempHumApp
+//  Motor.swift
+//  Motor
 //
-//  Created by radical on 2021/04/05.
+//  Created by radical on 2021/06/20.
 //
 
 import Foundation
@@ -35,10 +35,10 @@ class Motor : ObservableObject{
         if g_active == false {
             connect()
             addTimer = Timer.scheduledTimer(timeInterval:0.2,
-                                                 target:self,
-                                                 selector:#selector(self.interval_get),
-                                                 userInfo:nil,
-                                                 repeats:true)
+                                            target:self,
+                                            selector:#selector(self.interval_send),
+                                            userInfo:nil,
+                                            repeats:true)
             g_active = true
         }
     }
@@ -66,7 +66,9 @@ class Motor : ObservableObject{
         let semaphore = DispatchSemaphore(value: 0)
         var ret = -1
     
-        g_connection = NWConnection(host: g_host, port: g_port, using: .tcp)
+        g_connection = NWConnection(host: g_host,
+                                    port: g_port,
+                                    using: .tcp)
         g_connection.stateUpdateHandler = { (newState) in
             switch newState {
                 case .ready:
@@ -91,7 +93,7 @@ class Motor : ObservableObject{
         return ret
     }
     
-    @objc func interval_get(sender: Timer)
+    @objc func interval_send(sender: Timer)
     {
         send()
     }
